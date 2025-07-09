@@ -16,6 +16,8 @@ A lightweight JavaScript utility class for managing arrays of objects in `localS
 ```
 
 ---
+
+ ```javascript
 const db = new LocalDB();
 
 // Add items
@@ -38,6 +40,5 @@ db.clear('users');
 
 // Clear all localStorage
 db.clearAll();
+```
 
- 
-  
