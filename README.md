@@ -16,16 +16,13 @@ A lightweight JavaScript utility class for managing arrays of objects in `localS
 ```
 
 ---
-
-## ✨ Getting Started
-
 const db = new LocalDB();
 
 // Add items
 db.add('users', [{ id: 1, name: 'Alice' }]);
 
 // Get all items
-console.log(db.get('users'));
+console.log(db.get('users')); // [{ id: 1, name: 'Alice' }]
 
 // Find a user
 const user = db.find('users', { id: 1 });
@@ -42,5 +39,5 @@ db.clear('users');
 // Clear all localStorage
 db.clearAll();
 
-
+ 
   
