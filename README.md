@@ -26,7 +26,7 @@ npm install localdb-js
 Or include directly in the browser:
 
 ```html
-<script src="localdb.min.js"></script>
+<script src="localdb.js"></script>
 ```
 
 ---
@@ -223,16 +223,62 @@ db.query("SELECT * FROM users WHERE (age > 18 OR name = 'Bob') AND isActive = tr
 db.defineTable("orders", {
   id: { type: "string", required: true },
   userId: { type: "string" },
-  total: { type: "number" }
+  total: { type: "number" },
+  status: { type: "string" }
 });
 
 db.insert("orders", [
-  { id: "o1", userId: "u1", total: 99.99 },
-  { id: "o2", userId: "u1", total: 199.99 }
+  { id: "o1", userId: "u1", total: 99.99, status: "shipped" },
+  { id: "o2", userId: "u1", total: 199.99, status: "processing" },
+  { id: "o3", userId: "u3", total: 49.99, status: "cancelled" }
 ]);
 
-db.query("SELECT * FROM users JOIN orders ON users.id = orders.userId WHERE total > 100");
+const result = db.query(
+  "SELECT * FROM users JOIN orders ON users.id = orders.userId WHERE (total > 100 OR status = 'cancelled') AND isActive = true"
+);
+console.log(result);
 ```
 
 📦 Output:
-All orders over 100 with user info merged.
+Only joined orders where total > 100 OR status is 'cancelled' AND user is active.
+
+```js
+[
+  { id: 'u1', name: 'Alice', ..., orderId: 'o2', total: 199.99, status: 'processing' }
+]
+```
+
+---
+
+## 📋 Real-World Example: Task Manager
+
+```js
+// Define users and tasks
+
+db.defineTable("tasks", {
+  id: { type: "string", required: true },
+  title: { type: "string" },
+  userId: { type: "string" },
+  priority: { type: "string", default: "medium" },
+  completed: { type: "boolean", default: false },
+  dueDate: { type: "string" } // ISO date
+});
+
+db.insert("tasks", [
+  { id: "t1", title: "Design homepage", userId: "u1", priority: "high", completed: false, dueDate: "2024-12-01" },
+  { id: "t2", title: "Fix login bug", userId: "u2", completed: true, dueDate: "2024-10-10" },
+  { id: "t3", title: "Write docs", userId: "u1", dueDate: "2024-11-05" },
+]);
+
+// Fetch all pending tasks assigned to active users, ordered by priority
+const results = db.query(
+  "SELECT * FROM users JOIN tasks ON users.id = tasks.userId WHERE tasks.completed = false AND users.isActive = true ORDER BY tasks.priority ASC"
+);
+
+console.log(results);
+```
+
+📦 Output:
+A list of incomplete tasks with user details, sorted by priority.
+
+---
