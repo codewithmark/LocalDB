@@ -19,7 +19,7 @@ A lightweight JavaScript utility class for managing arrays of objects in `localS
 
 ## ✨ Getting Started
 
- const db = new LocalDB();
+const db = new LocalDB();
 
 // Add items
 db.add('users', [{ id: 1, name: 'Alice' }]);
@@ -41,5 +41,6 @@ db.clear('users');
 
 // Clear all localStorage
 db.clearAll();
+
 
   
